@@ -1,0 +1,111 @@
+{
+ "query_day": 49,
+ "colors": [
+  "blue",
+  "pink",
+  "yellow",
+  "green",
+  "orange",
+  "white"
+ ],
+ "rotation": [
+  "blue",
+  "pink",
+  "yellow",
+  "green",
+  "orange"
+ ],
+ "markdown": {
+  "bands": [
+   {
+    "max_age": 13,
+    "percent": 0
+   },
+   {
+    "max_age": 27,
+    "percent": 25
+   },
+   {
+    "max_age": 41,
+    "percent": 50
+   }
+  ],
+  "pull_age": 42,
+  "color_percent": 50,
+  "minimum_price": "0.50"
+ },
+ "items": [
+  {
+   "id": "t01",
+   "color": "blue",
+   "price": "12.00",
+   "tagged": 36
+  },
+  {
+   "id": "t02",
+   "color": "blue",
+   "price": "12.00",
+   "tagged": 35
+  },
+  {
+   "id": "t03",
+   "color": "green",
+   "price": "20.00",
+   "tagged": 8
+  },
+  {
+   "id": "t04",
+   "color": "green",
+   "price": "20.00",
+   "tagged": 7
+  },
+  {
+   "id": "t05",
+   "color": "white",
+   "price": "6.50",
+   "tagged": 50
+  },
+  {
+   "id": "t06",
+   "color": "pink",
+   "price": "18.00",
+   "tagged": 4
+  },
+  {
+   "id": "t07",
+   "color": "pink",
+   "price": "15.00",
+   "tagged": 19
+  },
+  {
+   "id": "t08",
+   "color": "pink",
+   "price": "24.00",
+   "tagged": 29
+  },
+  {
+   "id": "t09",
+   "color": "yellow",
+   "price": "1.90",
+   "tagged": 31
+  },
+  {
+   "id": "t10",
+   "color": "orange",
+   "price": "0.80",
+   "tagged": 14
+  },
+  {
+   "id": "t11",
+   "color": "pink",
+   "price": "0.25",
+   "tagged": 47
+  },
+  {
+   "id": "t12",
+   "color": "yellow",
+   "price": "9.99",
+   "tagged": 43
+  }
+ ]
+}

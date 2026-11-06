@@ -1,0 +1,19 @@
+_ > nanoagent.plugin.v0001.ProductConfig:
+tagline: "What everything on the floor costs today, once the colour of the week is in"
+summary: >-
+  Thrift Markdown prices a store's whole floor on one day. Every item carries a tag colour, an
+  original price and the day it was tagged; the store knocks a quarter off at two weeks, a half
+  at four, and pulls it at six, while one colour a week comes down 50% on top of that. The two
+  never stack, which is the whole difficulty: an item gets the better of the two, a tie counts
+  as the colour, and nothing saves something already six weeks old. Out comes a price per item,
+  or that it has left the floor.
+highlights:
+  - "Two markdown rules that interact, and a score that is the share of items priced exactly right"
+  - "A status as well as a price, so a right number under the wrong rule still reads as wrong"
+  - "Exact money: decimal strings and whole cents, rounded half up, never a float"
+  - "Reads only the one file you point it at, and reaches no network at all"
+steps:
+  - "Put your inventory, as JSON, in the plugin's folder: the store's rules, its colour rotation and the day to price"
+  - "Ask it to price that day"
+  - "It reads the inventory once, then prices every item itself"
+  - "You get a status and a price per item, and a score that is the share priced right"

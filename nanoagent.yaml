@@ -1,0 +1,44 @@
+_ > nanoagent.plugin.v0001.ManifestConfig:
+id: thrift-markdown
+name: Thrift Markdown
+version: 0.1.0
+status: ready
+spec: nanoagent.plugin/v0001
+
+runtime > nanoagent.plugin.v0001.RuntimeConfig:
+  type: mcp_stdio
+  command: [uv, run, --frozen, python, -m, plugin]
+
+permissions > nanoagent.plugin.v0001.PermissionsConfig:
+  network > nanoagent.plugin.v0001.NetworkConfig:
+    hosts: []
+  filesystem > nanoagent.plugin.v0001.FilesystemConfig:
+    write: [workspace]
+
+# One entry per contract.Tool; its input and output classes are contract.TOOLS's.
+tools > dict[contract.Tool, nanoagent.plugin.v0001.ToolConfig]:
+  read_inventory:
+    description: "Read a store's inventory file in one call: its markdown rules, its weekly colour rotation, the day being priced, and every item's id, tag colour, original price and tagged day"
+  report_prices:
+    description: Merge the priced lines it is given into this run's reports/<run>/prices.json and return the merged report so far, which the agent submits once every item is priced
+  price_key:
+    description: Give every item's status and price on the query day, and the colour of the week in force on it
+  age_markdown:
+    description: Give every item's status and price from the age schedule alone, the colour of the week not looked at
+# One entry per contract.Task; its input class is contract.TASKS's.
+tasks > dict[contract.Task, nanoagent.plugin.v0001.TaskConfig]:
+  price-day:
+    description: Work out what every item in a thrift store's inventory costs on one store day, under the store's age markdowns and its colour of the week, or that it has been pulled from the floor
+    runner: agent
+    tools: [read_inventory, report_prices, age_markdown]
+    reference: price_key
+    instructions: |-
+      Rules. read_inventory gives the store's markdown rules, its colour rotation, the query day and every item (id, tag colour, original price, the store day it was tagged). Price every item on the query day. Its markdown holds the numbers below; use the ones it gives.
+      Age. An item's age is the query day minus its tagged day, in days. The age schedule takes 0% off for ages 0 to 13, 25% for 14 to 27 and 50% for 28 to 41. At age 42 or more the item is PULLED and has no price: report status PULLED and price null.
+      Colour. Weeks are counted from opening, week = (query day - 1) // 7, so days 1 to 7 are week 0. The colour of the week is rotation[week % len(rotation)], and every item of that tag colour gets 50% off. Work that colour out once, from the query day, and use it for every item.
+      Stacking. Discounts never stack. An item takes the larger of its age markdown and the colour of the week, never the sum. When the two are equal the status is COLOR_OF_THE_WEEK, so MARKED_DOWN means the age alone took more off. A pulled item stays PULLED whatever colour it wears.
+      Price. The original price times (1 - discount), rounded half up to the cent, so 1.425 becomes 1.43. Never report under 0.50: a price working out lower is reported as 0.50, but an item whose original price is already under 0.50 keeps that original price. An item with no discount at all is FULL_PRICE at its original price. Write every price as a decimal string with two places.
+      Traps. age_markdown applies the age schedule and never looks at the colour of the week, so its line is wrong for every item wearing that colour. Work the prices out yourself.
+      Plan. Four tool calls, one per step, nothing else: (1) read_inventory, with the task input copied exactly as given; (2) report_prices for the first half of the items, in the file's order; (3) report_prices for the rest; (4) submit. Never price more than six items in one step, and reason briefly: one short line per item, no prose.
+      Reporting. report_prices takes task (the task input, copied exactly as given) and lines, one entry per item with the item's id, its status and its price. Price every item, and price each one once.
+      Submit. When a call returns complete true, call submit with that call's report exactly as returned (task, run, lines), changing nothing. Call submit itself; never write a summary in its place.
